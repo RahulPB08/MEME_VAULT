@@ -58,10 +58,7 @@ contract MemeVault is ERC721URIStorage, ReentrancyGuard, Ownable {
         uint256 price
     );
 
-    event MarketItemCancelled(
-        uint256 indexed tokenId,
-        address indexed seller
-    );
+    event MarketItemCancelled(uint256 indexed tokenId, address indexed seller);
 
     event MarketItemRelisted(
         uint256 indexed tokenId,
@@ -119,27 +116,39 @@ contract MemeVault is ERC721URIStorage, ReentrancyGuard, Ownable {
         _createMarketItem(newTokenId, price);
     }
 
-    /// @notice Re-list an owned NFT for sale
+    /// @notice Re-list or update the price of an NFT you own or are currently selling
     /// @param tokenId Token to re-list
     /// @param price   New listing price in wei
     function resellToken(uint256 tokenId, uint256 price) external payable {
-        require(
-            idToMarketItem[tokenId].owner == msg.sender,
-            "MemeVault: caller is not the owner"
-        );
+        MarketItem storage item = idToMarketItem[tokenId];
         require(msg.value == listingPrice, "MemeVault: incorrect listing fee");
         require(price > 0, "MemeVault: price must be > 0");
 
-        MarketItem storage item = idToMarketItem[tokenId];
+        // Case 1: NFT already in marketplace (active listing) — original seller updates price
+        bool isActiveSeller = item.active && item.seller == msg.sender;
+
+        // Case 2: User wallet holds the NFT (cancelled listing or bought at auction)
+        bool holdsToken = false;
+        try this.ownerOf(tokenId) returns (address tokenOwner) {
+            holdsToken = (tokenOwner == msg.sender);
+        } catch {}
+
+        require(
+            isActiveSeller || holdsToken,
+            "MemeVault: caller is not the owner"
+        );
+
         item.sold = false;
         item.active = true;
         item.price = price;
         item.seller = payable(msg.sender);
         item.owner = payable(address(this));
 
-        _itemsSold--;
-
-        _transfer(msg.sender, address(this), tokenId);
+        // Only physically transfer if the user currently holds the NFT in their wallet
+        if (holdsToken && !isActiveSeller) {
+            _itemsSold--;
+            _transfer(msg.sender, address(this), tokenId);
+        }
 
         emit MarketItemRelisted(tokenId, msg.sender, price);
     }
@@ -151,10 +160,7 @@ contract MemeVault is ERC721URIStorage, ReentrancyGuard, Ownable {
 
         require(item.active, "MemeVault: item is not listed");
         require(!item.sold, "MemeVault: item already sold");
-        require(
-            msg.value == item.price,
-            "MemeVault: incorrect purchase price"
-        );
+        require(msg.value == item.price, "MemeVault: incorrect purchase price");
 
         address payable seller = item.seller;
 
@@ -179,10 +185,7 @@ contract MemeVault is ERC721URIStorage, ReentrancyGuard, Ownable {
     function cancelMarketItem(uint256 tokenId) external nonReentrant {
         MarketItem storage item = idToMarketItem[tokenId];
 
-        require(
-            item.seller == msg.sender,
-            "MemeVault: only seller can cancel"
-        );
+        require(item.seller == msg.sender, "MemeVault: only seller can cancel");
         require(item.active, "MemeVault: item is not active");
 
         item.active = false;

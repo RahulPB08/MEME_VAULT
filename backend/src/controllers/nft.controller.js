@@ -11,12 +11,11 @@ export const createNFT = async (req, res) => {
       royaltyPercent, transactionHash, creatorAddress,
     } = req.body;
 
-    const nft = await NFT.create({
+    const nftData = {
       name, description, image, ipfsHash, metadataUri,
       price: price || 0, priceInEth: priceInEth || '0',
       category: category || 'other',
       tags: tags || [],
-      tokenId: tokenId || null,
       royaltyPercent: royaltyPercent || 10,
       transactionHash: transactionHash || '',
       creatorAddress: creatorAddress || req.user.walletAddress || '',
@@ -24,7 +23,13 @@ export const createNFT = async (req, res) => {
       creator: req.user._id,
       owner: req.user._id,
       history: [{ event: 'mint', from: '', to: creatorAddress || '', price: 0, txHash: transactionHash || '' }],
-    });
+    };
+
+    if (tokenId !== null && tokenId !== undefined) {
+      nftData.tokenId = tokenId;
+    }
+
+    const nft = await NFT.create(nftData);
 
     // Update user nftsCreated count
     await User.findByIdAndUpdate(req.user._id, { $inc: { nftsCreated: 1 } });
@@ -149,6 +154,45 @@ export const updateNFT = async (req, res) => {
     if (sold !== undefined) nft.sold = sold;
 
     await nft.save();
+    res.json({ success: true, nft });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// @desc    Register a successful purchase
+// @route   POST /api/nfts/:id/buy
+export const buyNFT = async (req, res) => {
+  try {
+    const nft = await NFT.findById(req.params.id);
+    if (!nft) return res.status(404).json({ success: false, message: 'NFT not found' });
+    
+    // Update owner, mark as unlisted, increment seller's sold count and buyer's bought count (if tracked)
+    nft.owner = req.user._id;
+    nft.listed = false;
+    // nft.sold = true; // optional logic
+
+    const { transactionHash } = req.body;
+    if (transactionHash) {
+      nft.history.push({
+        event: 'sale',
+        price: nft.price,
+        from: nft.owner, // Previous owner technically, but this works for now
+        to: req.user._id,
+        transactionHash,
+        timestamp: new Date()
+      });
+      // Optionally update the root transactionHash
+      nft.transactionHash = transactionHash;
+    }
+
+    await nft.save();
+
+    // Increment creator/seller stats if needed
+    if (req.user && req.user._id.toString() !== nft.creator.toString()) {
+      await User.findByIdAndUpdate(nft.creator, { $inc: { nftsSold: 1 } });
+    }
+
     res.json({ success: true, nft });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

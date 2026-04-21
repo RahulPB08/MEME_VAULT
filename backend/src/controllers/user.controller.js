@@ -17,6 +17,7 @@ export const getUserProfile = async (req, res) => {
 
     res.json({ success: true, user, createdNFTs, ownedNFTs });
   } catch (error) {
+    console.error('Error fetching user profile:', error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
@@ -96,6 +97,30 @@ export const getUserNFTs = async (req, res) => {
       .sort({ createdAt: -1 });
 
     res.json({ success: true, nfts });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// @desc    Get all users (People/Discover page)
+export const getAllUsers = async (req, res) => {
+  try {
+    const { page = 1, limit = 20, search } = req.query;
+    const query = {};
+    if (search) {
+      query.$or = [
+        { username: { $regex: search, $options: 'i' } },
+        { bio: { $regex: search, $options: 'i' } },
+      ];
+    }
+    const skip = (Number(page) - 1) * Number(limit);
+    const total = await User.countDocuments(query);
+    const users = await User.find(query)
+      .select('username avatar bio isVerified nftsCreated totalEarnings followers walletAddress')
+      .sort({ nftsCreated: -1, createdAt: -1 })
+      .skip(skip)
+      .limit(Number(limit));
+    res.json({ success: true, users, pagination: { total, page: Number(page), pages: Math.ceil(total / limit) } });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

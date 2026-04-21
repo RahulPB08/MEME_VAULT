@@ -80,7 +80,8 @@ const nftSchema = new mongoose.Schema(
       default: false,
     },
     auctionId: {
-      type: Number,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Auction',
       default: null,
     },
     transactionHash: {
@@ -114,7 +115,7 @@ const nftSchema = new mongoose.Schema(
 
 // Virtual for like count
 nftSchema.virtual('likeCount').get(function () {
-  return this.likes.length;
+  return this.likes ? this.likes.length : 0;
 });
 
 nftSchema.set('toJSON', { virtuals: true });

@@ -11,6 +11,9 @@ import Register from './pages/Register';
 import NFTDetail from './pages/NFTDetail';
 import Auctions from './pages/Auctions';
 import Dashboard from './pages/Dashboard';
+import Collections from './pages/Collections';
+import People from './pages/People';
+import AuctionDetail from './pages/AuctionDetail';
 import { Suspense, lazy } from 'react';
 
 // Lazy load less critical pages
@@ -35,12 +38,15 @@ function App() {
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/explore" element={<Explore />} />
+                  <Route path="/collections" element={<Collections />} />
                   <Route path="/create" element={<Create />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />
                   <Route path="/nft/:id" element={<NFTDetail />} />
                   <Route path="/auctions" element={<Auctions />} />
+                  <Route path="/auction/:id" element={<AuctionDetail />} />
                   <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/people" element={<People />} />
                   <Route path="/profile/:identifier" element={<Profile />} />
                   <Route path="*" element={
                     <div className="empty-state" style={{ paddingTop: '8rem' }}>

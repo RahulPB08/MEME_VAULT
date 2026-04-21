@@ -10,16 +10,25 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useWeb3 } from '../context/Web3Context';
+import { resolveImageUrl, makeGatewayFallback } from '../utils/imageUtils';
 
 const NFTDetail = () => {
   const { id } = useParams();
   const { user, isAuthenticated } = useAuth();
-  const { isConnected, buyNFT, formatEth } = useWeb3();
+  const { isConnected, buyNFT, resellNFT, cancelListing, createAuction, account, formatEth, parseEth } = useWeb3();
   const [nft, setNft] = useState(null);
   const [loading, setLoading] = useState(true);
   const [buying, setBuying] = useState(false);
   const [offers, setOffers] = useState([]);
   const [activeTab, setActiveTab] = useState('history');
+
+  const [auctionForm, setAuctionForm] = useState(false);
+  const [auctionData, setAuctionData] = useState({ price: '0.1', duration: 1 });
+  const [startingAuction, setStartingAuction] = useState(false);
+
+  const [listingForm, setListingForm] = useState(false);
+  const [listingPrice, setListingPrice] = useState('0.1');
+  const [processingListing, setProcessingListing] = useState(false);
 
   useEffect(() => {
     const fetchNFT = async () => {
@@ -45,7 +54,12 @@ const NFTDetail = () => {
     setBuying(true);
     const tid = toast.loading('Processing purchase...');
     try {
-      await buyNFT(nft.tokenId, nft.price);
+      const receipt = await buyNFT(nft.tokenId, nft.price);
+      // Register purchase on backend
+      await axios.post(`/api/nfts/${id}/buy`, { transactionHash: receipt?.hash }, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('mv_token')}` },
+      });
+      
       toast.dismiss(tid);
       toast.success('NFT purchased! 🎉');
       const res = await axios.get(`/api/nfts/${id}`);
@@ -55,6 +69,100 @@ const NFTDetail = () => {
       toast.error(e.message || 'Transaction failed');
     } finally {
       setBuying(false);
+    }
+  };
+
+  const handleStartAuction = async () => {
+    if (!isConnected) { toast.error('Connect wallet first!'); return; }
+    if (!auctionData.price || parseFloat(auctionData.price) <= 0) { toast.error('Invalid price'); return; }
+    
+    setStartingAuction(true);
+    const tid = toast.loading('Creating auction on-chain...');
+    try {
+      const startingPriceInWei = parseEth(auctionData.price);
+      const reservePriceInWei = 0; // No reserve for simplicity
+      const durationInSeconds = Number(auctionData.duration) * 24 * 60 * 60;
+      
+      const receipt = await createAuction(
+        import.meta.env.VITE_MEMEVAULT_ADDRESS,
+        nft.tokenId,
+        startingPriceInWei,
+        reservePriceInWei,
+        durationInSeconds
+      );
+      
+      toast.loading('Saving auction to database...', { id: tid });
+      
+      await axios.post('/api/auctions', {
+        nftId: nft._id,
+        tokenId: nft.tokenId,
+        startingPrice: startingPriceInWei.toString(),
+        startingPriceEth: auctionData.price,
+        reservePrice: reservePriceInWei.toString(),
+        duration: durationInSeconds,
+        nftContractAddress: import.meta.env.VITE_MEMEVAULT_ADDRESS,
+        transactionHash: receipt.hash,
+        sellerAddress: account
+      }, { headers: { Authorization: `Bearer ${localStorage.getItem('mv_token')}` } });
+      
+      toast.success('Auction started successfully! 🔨', { id: tid });
+      setAuctionForm(false);
+      
+      // reload nft state
+      const res = await axios.get(`/api/nfts/${id}`);
+      setNft(res.data.nft);
+    } catch (e) {
+      console.error(e);
+      toast.dismiss(tid);
+      toast.error('Failed to start auction');
+    } finally {
+      setStartingAuction(false);
+    }
+  };
+
+  const handleListFixedPrice = async () => {
+    if (!isConnected) { toast.error('Connect wallet first!'); return; }
+    if (!listingPrice || parseFloat(listingPrice) <= 0) { toast.error('Invalid price'); return; }
+
+    setProcessingListing(true);
+    const tid = toast.loading('Listing on-chain...');
+    try {
+      const newPriceWei = parseEth(listingPrice);
+      const receipt = await resellNFT(nft.tokenId, newPriceWei);
+      
+      toast.loading('Saving listing...', { id: tid });
+      await axios.put(`/api/nfts/${id}`, {
+        listed: true,
+        price: newPriceWei.toString(),
+        priceInEth: listingPrice,
+        transactionHash: receipt.hash
+      }, { headers: { Authorization: `Bearer ${localStorage.getItem('mv_token')}` } });
+      
+      toast.success('NFT Listed for Sale! 🏷️', { id: tid });
+      setListingForm(false);
+      const res = await axios.get(`/api/nfts/${id}`);
+      setNft(res.data.nft);
+    } catch (e) {
+      toast.dismiss(tid);
+      toast.error(e.message || 'Failed to list NFT');
+    } finally {
+      setProcessingListing(false);
+    }
+  };
+
+  const handleCancelListing = async () => {
+    if (!isConnected) { toast.error('Connect wallet first!'); return; }
+    const tid = toast.loading('Cancelling listing on-chain...');
+    try {
+      await cancelListing(nft.tokenId);
+      toast.loading('Updating database...', { id: tid });
+      await axios.put(`/api/nfts/${id}`, { listed: false }, { headers: { Authorization: `Bearer ${localStorage.getItem('mv_token')}` } });
+      toast.success('Listing cancelled ❌', { id: tid });
+      const res = await axios.get(`/api/nfts/${id}`);
+      setNft(res.data.nft);
+    } catch (e) {
+      toast.dismiss(tid);
+      toast.error(e.message || 'Failed to cancel listing');
     }
   };
 
@@ -104,10 +212,10 @@ const NFTDetail = () => {
             >
               <div className="nft-detail-img-card">
                 <img
-                  src={nft.image || 'https://placehold.co/600x600/111118/7c3aed?text=🎭'}
+                  src={resolveImageUrl(nft.image)}
                   alt={nft.name}
                   className="nft-detail-img"
-                  onError={e => { e.target.src = 'https://placehold.co/600x600/111118/7c3aed?text=🎭'; }}
+                  onError={makeGatewayFallback(nft.image)}
                 />
               </div>
 
@@ -125,6 +233,12 @@ const NFTDetail = () => {
                   <span>Blockchain</span>
                   <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
                     <SiEthereum size={12} style={{ color: '#7c3aed' }} /> {nft.blockchain || 'Ethereum'}
+                  </span>
+                </div>
+                <div className="nft-info-row">
+                  <span>Contract</span>
+                  <span style={{ fontFamily: 'monospace', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                    {import.meta.env.VITE_MEMEVAULT_ADDRESS.slice(0, 6)}...{import.meta.env.VITE_MEMEVAULT_ADDRESS.slice(-4)}
                   </span>
                 </div>
                 {nft.tokenId && (
@@ -192,7 +306,7 @@ const NFTDetail = () => {
                 </div>
               </div>
 
-              {/* Price & Buy */}
+              {/* Price & Buy / Actions */}
               <div className="nft-purchase-card">
                 {nft.listed && (
                   <>
@@ -218,25 +332,142 @@ const NFTDetail = () => {
                       </div>
                     )}
                     {isOwner && (
-                      <div className="purchase-actions">
-                        <Link to="/dashboard" className="btn btn-secondary btn-xl" style={{ flex: 1 }}>
-                          Manage NFT
-                        </Link>
-                        <button className="btn btn-secondary btn-xl" onClick={handleShare}>
-                          <FiShare2 />
+                      <div className="purchase-actions" style={{ flexDirection: 'column', gap: '0.75rem' }}>
+                        <button className="btn btn-secondary btn-xl" style={{ width: '100%', justifyContent: 'center' }} onClick={handleCancelListing}>
+                          Cancel Listing ❌
                         </button>
                       </div>
                     )}
                   </>
                 )}
+                
                 {nft.onAuction && (
-                  <div style={{ textAlign: 'center', padding: '0.5rem' }}>
-                    <span className="badge badge-gold" style={{ fontSize: '0.9rem', padding: '0.5rem 1.5rem' }}>🔨 On Auction</span>
+                  <div style={{ textAlign: 'center', padding: '1rem 0.5rem' }}>
+                    <span className="badge badge-gold" style={{ fontSize: '1rem', padding: '0.75rem 2rem', marginBottom: '1.5rem', display: 'inline-block' }}>🔨 Currently On Auction</span>
+                    <Link to={`/auction/${nft.auctionId}`} className="btn btn-primary btn-xl" style={{ width: '100%', justifyContent: 'center' }}>
+                      Go to Auction Room to Bid
+                    </Link>
                   </div>
                 )}
+                
                 {!nft.listed && !nft.onAuction && (
-                  <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '1rem' }}>
-                    Not currently listed for sale
+                  <div style={{ padding: '0.5rem' }}>
+                    <div style={{ textAlign: 'center', color: 'var(--text-muted)', paddingBottom: '1.5rem' }}>
+                      Not currently listed for direct sale
+                    </div>
+                    
+                    {/* Legacy NFT warning — no tokenId */}
+                    {isOwner && !nft.tokenId && (
+                      <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: '12px', padding: '1.25rem', marginBottom: '1rem', display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
+                        <span style={{ fontSize: '1.5rem' }}>⚠️</span>
+                        <div>
+                          <p style={{ fontWeight: 700, marginBottom: '0.25rem', color: '#f87171' }}>Legacy NFT – No Token ID</p>
+                          <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '0.75rem' }}>This NFT was saved before blockchain integration was finalized. It has no on-chain Token ID, so it cannot be listed or auctioned. Please mint a fresh NFT.</p>
+                          <Link to="/create" className="btn btn-primary btn-sm" style={{ display: 'inline-flex' }}>Mint a New NFT →</Link>
+                        </div>
+                      </div>
+                    )}
+                    {/* Owner Action: Start Auction / List Form — only when on-chain tokenId exists */}
+                    {isOwner && nft.tokenId && (
+                      <div className="purchase-actions" style={{ flexDirection: 'column', gap: '0.75rem' }}>
+                        <div style={{ display: 'flex', gap: '0.75rem', width: '100%' }}>
+                          <button 
+                            className="btn btn-primary btn-xl" 
+                            style={{ flex: 1, justifyContent: 'center', padding: '0.75rem 0' }} 
+                            onClick={() => { setListingForm(!listingForm); setAuctionForm(false); }}
+                          >
+                            {listingForm ? 'Cancel' : 'List Fixed Price'}
+                          </button>
+                          
+                          <button 
+                            className="btn btn-outline btn-xl" 
+                            style={{ flex: 1, justifyContent: 'center', padding: '0.75rem 0' }} 
+                            onClick={() => { setAuctionForm(!auctionForm); setListingForm(false); }}
+                          >
+                            {auctionForm ? 'Cancel' : 'Start Auction 🔨'}
+                          </button>
+                        </div>
+
+                        {listingForm && (
+                           <motion.div 
+                             initial={{ opacity: 0, height: 0 }} 
+                             animate={{ opacity: 1, height: 'auto' }} 
+                             style={{ background: 'var(--bg-secondary)', padding: '1.5rem', borderRadius: '16px', border: '1px solid var(--border-card)', marginTop: '0.5rem' }}
+                           >
+                             <h4 style={{ marginBottom: '1rem', fontSize: '1.1rem' }}>List for Direct Sale</h4>
+                             <div style={{ marginBottom: '1.5rem' }}>
+                               <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.3rem', display: 'block' }}>Sale Price (ETH)</label>
+                               <div className="price-tag" style={{ background: 'var(--bg-card)', padding: '0.5rem 1rem', display: 'flex', gap: '0.5rem', border: '1px solid var(--border-primary)', borderRadius: '8px' }}>
+                                 <SiEthereum size={14} style={{ color: '#7c3aed' }} />
+                                 <input 
+                                   type="number" 
+                                   style={{ background: 'transparent', border: 'none', color: 'white', flex: 1, outline: 'none' }} 
+                                   min="0" 
+                                   step="0.0001"
+                                   value={listingPrice} 
+                                   onChange={e => setListingPrice(e.target.value)} 
+                                 />
+                               </div>
+                             </div>
+                             
+                             <button 
+                               className="btn btn-primary btn-lg" 
+                               style={{ width: '100%', justifyContent: 'center' }} 
+                               disabled={processingListing} 
+                               onClick={handleListFixedPrice}
+                             >
+                               {processingListing ? 'Processing...' : 'Confirm Listing'}
+                             </button>
+                           </motion.div>
+                        )}
+                        
+                        {auctionForm && (
+                           <motion.div 
+                             initial={{ opacity: 0, height: 0 }} 
+                             animate={{ opacity: 1, height: 'auto' }} 
+                             style={{ background: 'var(--bg-secondary)', padding: '1.5rem', borderRadius: '16px', border: '1px solid var(--border-card)', marginTop: '0.5rem' }}
+                           >
+                             <h4 style={{ marginBottom: '1rem', fontSize: '1.1rem' }}>Create Auction</h4>
+                             <div style={{ marginBottom: '1rem' }}>
+                               <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.3rem', display: 'block' }}>Starting Price (ETH)</label>
+                               <div className="price-tag" style={{ background: 'var(--bg-card)', padding: '0.5rem 1rem', display: 'flex', gap: '0.5rem', border: '1px solid var(--border-primary)', borderRadius: '8px' }}>
+                                 <SiEthereum size={14} style={{ color: '#7c3aed' }} />
+                                 <input 
+                                   type="number" 
+                                   style={{ background: 'transparent', border: 'none', color: 'white', flex: 1, outline: 'none' }} 
+                                   min="0" 
+                                   step="0.0001"
+                                   value={auctionData.price} 
+                                   onChange={e => setAuctionData({...auctionData, price: e.target.value})} 
+                                 />
+                               </div>
+                             </div>
+                             
+                             <div style={{ marginBottom: '1.5rem' }}>
+                               <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.3rem', display: 'block' }}>Duration</label>
+                               <select 
+                                 style={{ width: '100%', background: 'var(--bg-card)', border: '1px solid var(--border-primary)', borderRadius: '8px', padding: '0.8rem 1rem', color: 'white', outline: 'none' }} 
+                                 value={auctionData.duration} 
+                                 onChange={e => setAuctionData({...auctionData, duration: e.target.value})}
+                               >
+                                 <option value={1}>1 Day</option>
+                                 <option value={3}>3 Days</option>
+                                 <option value={7}>7 Days</option>
+                               </select>
+                             </div>
+                             
+                             <button 
+                               className="btn btn-primary btn-lg" 
+                               style={{ width: '100%', justifyContent: 'center' }} 
+                               disabled={startingAuction} 
+                               onClick={handleStartAuction}
+                             >
+                               {startingAuction ? 'Processing...' : 'Confirm & Start Auction'}
+                             </button>
+                           </motion.div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -258,10 +489,10 @@ const NFTDetail = () => {
                         <span className="history-event badge badge-primary" style={{ textTransform: 'capitalize' }}>{h.event}</span>
                         <span className="history-date">{new Date(h.timestamp).toLocaleDateString()}</span>
                         {h.price > 0 && (
-                          <span className="history-price">
-                            <SiEthereum size={10} style={{ color: '#7c3aed' }} />
-                            {(parseFloat(h.price) / 1e18).toFixed(4)} ETH
-                          </span>
+                           <span className="history-price">
+                             <SiEthereum size={10} style={{ color: '#7c3aed' }} />
+                             {(parseFloat(h.price) / 1e18).toFixed(4)} ETH
+                           </span>
                         )}
                       </div>
                     )) : (

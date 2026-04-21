@@ -3,12 +3,9 @@
 > vite
 
 
-  VITE v5.4.21  ready in 296 ms
+  VITE v5.4.21  ready in 304 ms
 
   ➜  Local:   http://localhost:3000/
   ➜  Network: use --host to expose
-  ➜  press h + enter to show help
-9:20:39 PM [vite] hmr update /src/pages/Dashboard.jsx
-9:20:53 PM [vite] hmr update /src/pages/Auctions.jsx
-9:21:14 PM [vite] ✨ new dependencies optimized: react-icons/fa
-9:21:14 PM [vite] ✨ optimized dependencies changed. reloading
+10:22:38 PM [vite] hmr update /src/pages/Create.jsx
+11:13:03 PM [vite] hmr update /src/index.css

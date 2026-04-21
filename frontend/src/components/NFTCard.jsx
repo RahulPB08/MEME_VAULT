@@ -8,8 +8,7 @@ import { useAuth } from '../context/AuthContext';
 import { useWeb3 } from '../context/Web3Context';
 import toast from 'react-hot-toast';
 import axios from 'axios';
-
-const PLACEHOLDER_IMG = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect fill="%23111118" width="400" height="400"/><text fill="%237c3aed" font-size="80" x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle">🎭</text></svg>';
+import { resolveImageUrl, makeGatewayFallback } from '../utils/imageUtils';
 
 const CATEGORY_COLORS = {
   trending: 'badge-gold',
@@ -28,6 +27,7 @@ const NFTCard = ({ nft, onBuy, index = 0 }) => {
   const [liked, setLiked] = useState(nft?.likes?.includes(user?._id));
   const [likeCount, setLikeCount] = useState(nft?.likeCount || nft?.likes?.length || 0);
   const [buying, setBuying] = useState(false);
+  const [purchasedLocally, setPurchasedLocally] = useState(false);
 
   const handleLike = async (e) => {
     e.preventDefault();
@@ -51,7 +51,11 @@ const NFTCard = ({ nft, onBuy, index = 0 }) => {
     setBuying(true);
     try {
       const receipt = await buyNFT(nft.tokenId, nft.price);
+      await axios.post(`/api/nfts/${nft._id}/buy`, { transactionHash: receipt?.hash }, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('mv_token')}` },
+      });
       toast.success('NFT purchased! 🎉');
+      setPurchasedLocally(true);
     } catch (e) {
       toast.error(e.message || 'Transaction failed');
     } finally {
@@ -71,26 +75,26 @@ const NFTCard = ({ nft, onBuy, index = 0 }) => {
       transition={{ duration: 0.4, delay: index * 0.06, ease: 'easeOut' }}
       whileHover={{ y: -6 }}
     >
-      <Link to={`/nft/${nft._id}`} style={{ display: 'block', position: 'relative' }}>
-        <div className="nft-img-wrap">
-          <img
-            src={nft.image || PLACEHOLDER_IMG}
-            alt={nft.name}
-            className="nft-card-image"
-            onError={e => { e.target.src = PLACEHOLDER_IMG; }}
-          />
-          <div className="nft-card-overlay" />
-          {/* Category Badge */}
-          <div className="nft-card-badge">
-            <span className={`badge ${categoryBadge}`}>{nft.category}</span>
-          </div>
-          {/* Like Button */}
-          <button className={`nft-like-btn ${liked ? 'liked' : ''}`} onClick={handleLike}>
-            <FiHeart fill={liked ? 'currentColor' : 'none'} size={14} />
-            <span>{likeCount}</span>
-          </button>
+      <Link to={`/nft/${nft._id}`} className="nft-card-link-cover" aria-hidden="true" />
+
+      <div className="nft-img-wrap">
+        <img
+          src={resolveImageUrl(nft.image)}
+          alt={nft.name}
+          className="nft-card-image"
+          onError={makeGatewayFallback(nft.image)}
+        />
+        <div className="nft-card-overlay" />
+        {/* Category Badge */}
+        <div className="nft-card-badge">
+          <span className={`badge ${categoryBadge}`}>{nft.category}</span>
         </div>
-      </Link>
+        {/* Like Button */}
+        <button className={`nft-like-btn ${liked ? 'liked' : ''}`} onClick={handleLike}>
+          <FiHeart fill={liked ? 'currentColor' : 'none'} size={14} />
+          <span>{likeCount}</span>
+        </button>
+      </div>
 
       <div className="nft-card-body">
         {/* Creator */}
@@ -127,7 +131,7 @@ const NFTCard = ({ nft, onBuy, index = 0 }) => {
         </div>
 
         {/* Action Button */}
-        {nft.listed && !isOwner && (
+        {nft.listed && !isOwner && !purchasedLocally && (
           <button
             className="btn btn-primary btn-sm nft-buy-btn"
             onClick={handleBuy}
@@ -143,13 +147,19 @@ const NFTCard = ({ nft, onBuy, index = 0 }) => {
           </Link>
         )}
         {isOwner && (
-          <Link to={`/dashboard`} className="btn btn-secondary btn-sm nft-buy-btn">
+          <Link to={`/nft/${nft._id}`} className="btn btn-secondary btn-sm nft-buy-btn">
             Manage
           </Link>
         )}
       </div>
 
       <style>{`
+        .nft-card { position: relative; }
+        .nft-card-link-cover {
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+        }
         .nft-img-wrap {
           position: relative;
           overflow: hidden;
@@ -184,7 +194,8 @@ const NFTCard = ({ nft, onBuy, index = 0 }) => {
           color: #ef4444;
           border-color: rgba(239,68,68,0.3);
         }
-        .nft-card-body { padding: 1rem; }
+        .nft-card-body { padding: 1rem; position: relative; z-index: 2; pointer-events: none; }
+        .nft-creator, .nft-like-btn, .nft-name, .nft-buy-btn { pointer-events: auto; }
         .nft-creator {
           display: flex;
           align-items: center;

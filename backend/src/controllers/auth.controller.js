@@ -15,7 +15,9 @@ export const register = async (req, res) => {
       });
     }
 
-    const user = await User.create({ username, email, password, walletAddress: walletAddress || null });
+    const userData = { username, email, password };
+    if (walletAddress) userData.walletAddress = walletAddress;
+    const user = await User.create(userData);
     sendTokenResponse(user, 201, res);
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

@@ -10,6 +10,7 @@ import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { useWeb3 } from '../context/Web3Context';
 import { ethers } from 'ethers';
+import { resolveImageUrl, PLACEHOLDER_IMG } from '../utils/imageUtils';
 
 const CATEGORIES = ['trending', 'dank', 'crypto', 'wholesome', 'classic', 'gaming', 'anime', 'politics', 'other'];
 
@@ -18,7 +19,7 @@ const STEPS = ['Upload Image', 'Add Details', 'Set Price', 'Mint NFT'];
 const Create = () => {
   const navigate = useNavigate();
   const { isAuthenticated, user } = useAuth();
-  const { isConnected, mintNFT, account, getListingPrice, formatEth } = useWeb3();
+  const { isConnected, mintNFT, account, getListingPrice, formatEth, contracts } = useWeb3();
 
   const [step, setStep] = useState(0);
   const [preview, setPreview] = useState(null);
@@ -42,7 +43,6 @@ const Create = () => {
     if (!file) return;
     setFileObj(file);
     setPreview(URL.createObjectURL(file));
-    setStep(1);
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -69,9 +69,23 @@ const Create = () => {
           Authorization: `Bearer ${localStorage.getItem('mv_token')}`,
         },
       });
-      setIpfsImage(res.data.ipfsUrl);
-      toast.success('Image uploaded to IPFS! 🚀');
-      setStep(2);
+
+      const returnedUrl = res.data.ipfsUrl || '';
+
+      // Detect mock/unconfigured Pinata: the backend returns a random fake CID
+      // when PINATA_JWT is not set. These hashes never exist on IPFS.
+      if (res.data.note && res.data.note.includes('Mock')) {
+        toast('⚠️ Pinata not configured — using mock IPFS hash. Images will NOT persist after restart. Configure PINATA_JWT in backend/.env for real uploads.', {
+          duration: 8000,
+          icon: '⚠️',
+          style: { background: '#7c3a0a', color: '#fde68a' },
+        });
+      } else {
+        toast.success('Image uploaded to IPFS! 🚀');
+      }
+
+      setIpfsImage(returnedUrl);
+      setStep(1); // advance to details step
     } catch (e) {
       toast.error(e.response?.data?.message || 'Upload failed');
     } finally {
@@ -81,12 +95,18 @@ const Create = () => {
 
   const uploadMetadata = async () => {
     if (!form.name || !form.description) { toast.error('Please fill name & description'); return; }
+    // Never use blob: URL as the stored image — it is ephemeral (dies on tab close).
+    // Require the IPFS URL from the previous step.
+    if (!ipfsImage) {
+      toast.error('Please upload the image to IPFS first (go back to Step 1).');
+      return;
+    }
     setUploading(true);
     try {
       const res = await axios.post('/api/upload/metadata', {
         name: form.name,
         description: form.description,
-        image: ipfsImage || preview,
+        image: ipfsImage, // always use the real IPFS URL, never a blob:
         category: form.category,
         attributes: form.tags.split(',').filter(Boolean).map(t => ({ trait_type: 'tag', value: t.trim() })),
       }, {
@@ -94,7 +114,7 @@ const Create = () => {
       });
       setMetadataUri(res.data.metadataUri);
       toast.success('Metadata uploaded! ✨');
-      setStep(3);
+      setStep(2);
 
       // Fetch listing fee
       try {
@@ -119,18 +139,44 @@ const Create = () => {
       const priceInWei = ethers.parseEther(form.price);
       const receipt = await mintNFT(metadataUri || `ipfs://mock-${Date.now()}`, priceInWei);
 
-      // Save to database
+      // Extract tokenId from ERC721 Transfer event logs (mint = Transfer from 0x0)
+      let extractedTokenId = null;
+      if (receipt && receipt.logs) {
+        for (const log of receipt.logs) {
+          try {
+            // ERC721 mint event: Transfer(from=0x0, to=minter, tokenId)
+            if (
+              log.topics[0] === ethers.id('Transfer(address,address,uint256)') &&
+              log.topics[1] === '0x0000000000000000000000000000000000000000000000000000000000000000'
+            ) {
+              extractedTokenId = Number(BigInt(log.topics[3]));
+              break;
+            }
+          } catch (e) {}
+        }
+      }
+
+      // Fallback: ask the contract how many tokens exist — that's our new tokenId
+      if (!extractedTokenId && contracts?.memeVault) {
+        try {
+          const total = await contracts.memeVault.getTotalMemes();
+          extractedTokenId = Number(total);
+        } catch (e) {}
+      }
+
+      // Save to database — NEVER use the blob: preview URL here.
+      // ipfsImage holds the real Pinata/IPFS gateway URL.
       await axios.post('/api/nfts', {
         name: form.name,
         description: form.description,
-        image: ipfsImage || preview || '',
-        ipfsHash: ipfsImage?.split('/').pop() || '',
+        image: ipfsImage || '', // blob: URLs are ephemeral — omit if IPFS upload didn't happen
+        ipfsHash: ipfsImage?.split('/ipfs/').pop() || '',
         metadataUri: metadataUri || '',
         price: priceInWei.toString(),
         priceInEth: form.price,
         category: form.category,
         tags: form.tags.split(',').filter(Boolean).map(t => t.trim()),
-        tokenId: null, // Will be extracted from event log in production
+        tokenId: extractedTokenId,
         royaltyPercent: form.royaltyPercent,
         listed: true,
         transactionHash: receipt?.hash || '',
@@ -144,25 +190,27 @@ const Create = () => {
       navigate('/dashboard');
     } catch (e) {
       toast.dismiss(toastId);
-      // Even if blockchain tx fails (no contract deployed), save to DB for demo
+      // Blockchain tx failed — save as draft so user doesn't lose their work.
+      // Still use ipfsImage (not blob) so the image survives a page reload.
       try {
         await axios.post('/api/nfts', {
           name: form.name,
           description: form.description,
-          image: ipfsImage || preview || '',
-          ipfsHash: ipfsImage?.split('/').pop() || '',
+          image: ipfsImage || '', // never blob: — always use the IPFS gateway URL
+          ipfsHash: ipfsImage?.split('/ipfs/').pop() || '',
           metadataUri: metadataUri || '',
           price: ethers.parseEther(form.price).toString(),
           priceInEth: form.price,
           category: form.category,
           tags: form.tags.split(',').filter(Boolean).map(t => t.trim()),
+          tokenId: null, // No tokenId — blockchain tx failed
           royaltyPercent: form.royaltyPercent,
-          listed: true,
+          listed: false, // Not truly listed since chain tx failed
           creatorAddress: account || '',
         }, {
           headers: { Authorization: `Bearer ${localStorage.getItem('mv_token')}` },
         });
-        toast.success('NFT created! (Blockchain tx pending contract deployment)');
+        toast.error('Blockchain transaction failed! NFT saved as draft. Please try reminting.', { duration: 6000 });
         navigate('/dashboard');
       } catch {
         toast.error(e.message || 'Minting failed');
@@ -219,8 +267,13 @@ const Create = () => {
             <div className="create-preview-col">
               <div className="preview-card">
                 <div className="preview-label">Preview</div>
-                {preview ? (
-                  <img src={preview} alt="Preview" className="preview-img" />
+                {(ipfsImage || preview) ? (
+                  <img
+                    src={ipfsImage ? resolveImageUrl(ipfsImage) : preview}
+                    alt="Preview"
+                    className="preview-img"
+                    onError={e => { e.target.src = PLACEHOLDER_IMG; }}
+                  />
                 ) : (
                   <div className="preview-placeholder">
                     <FiImage size={48} style={{ color: 'var(--text-muted)' }} />

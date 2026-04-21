@@ -12,115 +12,301 @@
 📡 Environment: development
 
 ✅  MongoDB Connected: localhost
-[0mGET / [33m404[0m 4.149 ms - 45[0m
-[0mGET /favicon.ico [33m404[0m 0.904 ms - 45[0m
-[0mGET / [33m404[0m 0.481 ms - 45[0m
-[0mGET / [33m404[0m 0.342 ms - 45[0m
-[0mGET / [33m404[0m 0.389 ms - 45[0m
-[0mGET /api/nfts/trending [32m200[0m 19.805 ms - 26[0m
-[0mGET /api/users/top-creators [32m200[0m 7.620 ms - 30[0m
-[0mGET /api/nfts/stats [32m200[0m 25.304 ms - 85[0m
-[0mGET /api/nfts/trending [36m304[0m 8.847 ms - -[0m
-[0mGET /api/users/top-creators [36m304[0m 5.275 ms - -[0m
-[0mGET /api/nfts/stats [36m304[0m 9.387 ms - -[0m
-[0mGET /api/nfts/trending [32m200[0m 6.378 ms - 26[0m
-[0mGET /api/users/top-creators [32m200[0m 4.718 ms - 30[0m
-[0mGET /api/nfts/stats [32m200[0m 15.816 ms - 85[0m
-[0mGET /api/nfts/trending [36m304[0m 6.300 ms - -[0m
-[0mGET /api/users/top-creators [36m304[0m 6.412 ms - -[0m
-[0mGET /api/nfts/stats [36m304[0m 15.282 ms - -[0m
-[0mGET /api/nfts?page=1&limit=12&sort=newest [32m200[0m 5.484 ms - 81[0m
-[0mGET /api/nfts?page=1&limit=12&sort=newest [36m304[0m 5.118 ms - -[0m
-[0mGET /api/nfts?page=1&limit=12&sort=newest&category=trending [32m200[0m 5.200 ms - 81[0m
-[0mGET /api/nfts?page=1&limit=12&sort=newest&category=dank [32m200[0m 4.813 ms - 81[0m
-[0mPOST /api/auth/register [32m201[0m 534.396 ms - 470[0m
-[0mGET /api/nfts/trending [36m304[0m 3.099 ms - -[0m
-[0mGET /api/users/top-creators [32m200[0m 6.200 ms - 178[0m
-[0mGET /api/nfts/trending [36m304[0m 2.614 ms - -[0m
-[0mGET /api/nfts/stats [32m200[0m 14.538 ms - 85[0m
-[0mGET /api/users/top-creators [36m304[0m 3.339 ms - -[0m
-[0mGET /api/nfts/stats [36m304[0m 9.418 ms - -[0m
-[0mGET /api/nfts?page=1&limit=12&sort=newest [36m304[0m 5.549 ms - -[0m
-[0mGET /api/nfts?page=1&limit=12&sort=newest [36m304[0m 5.695 ms - -[0m
-[0mGET /api/auctions?status=active&page=1&limit=12 [32m200[0m 7.405 ms - 74[0m
-[0mGET /api/auctions?status=active&page=1&limit=12 [36m304[0m 8.045 ms - -[0m
-[0mGET /api/auctions?status=ended&page=1&limit=12 [32m200[0m 3.863 ms - 74[0m
-[0mGET /api/auctions?status=cancelled&page=1&limit=12 [32m200[0m 3.879 ms - 74[0m
-[0mGET /api/auctions?status=active&page=1&limit=12 [36m304[0m 4.013 ms - -[0m
-[0mGET /api/nfts?page=1&limit=12&sort=newest [36m304[0m 4.560 ms - -[0m
-[0mGET /api/nfts?page=1&limit=12&sort=newest [36m304[0m 4.554 ms - -[0m
-[0mGET /api/nfts/trending [36m304[0m 2.485 ms - -[0m
-[0mGET /api/users/top-creators [36m304[0m 3.305 ms - -[0m
-[0mGET /api/nfts/trending [36m304[0m 2.322 ms - -[0m
-[0mGET /api/nfts/stats [36m304[0m 10.958 ms - -[0m
-[0mGET /api/users/top-creators [36m304[0m 2.759 ms - -[0m
-[0mGET /api/nfts/stats [36m304[0m 7.467 ms - -[0m
-[0mGET /api/nfts?page=1&limit=12&sort=newest [36m304[0m 3.966 ms - -[0m
-[0mGET /api/nfts?page=1&limit=12&sort=newest [36m304[0m 4.648 ms - -[0m
-[0mPOST /api/upload/metadata [32m200[0m 9.235 ms - 405[0m
-[0mPOST /api/nfts [32m201[0m 36.607 ms - 1667[0m
-[0mGET /api/offers/received [32m200[0m 12.592 ms - 28[0m
-[0mGET /api/users/69cd3f342f76ce6dda17aae5/nfts?type=created [32m200[0m 19.086 ms - 1090[0m
-[0mGET /api/offers/received [36m304[0m 8.080 ms - -[0m
-[0mGET /api/users/69cd3f342f76ce6dda17aae5/nfts?type=created [36m304[0m 13.330 ms - -[0m
-[0mGET /api/users/69cd3f342f76ce6dda17aae5/nfts?type=owned [32m200[0m 8.862 ms - 1090[0m
-[0mGET /api/users/69cd3f342f76ce6dda17aae5/nfts?type=created [36m304[0m 8.781 ms - -[0m
-[0mGET /api/users/69cd3f342f76ce6dda17aae5/nfts?type=owned [36m304[0m 6.701 ms - -[0m
-[0mPOST /api/nfts/69cd3fa52f76ce6dda17ab17/like [32m200[0m 10.540 ms - 43[0m
-[0mGET /api/nfts?page=1&limit=12&sort=newest [32m200[0m 11.078 ms - 1232[0m
-[0mGET /api/nfts?page=1&limit=12&sort=newest [36m304[0m 11.389 ms - -[0m
-[0mGET /api/auctions?status=active&page=1&limit=12 [36m304[0m 6.026 ms - -[0m
-[0mGET /api/auctions?status=active&page=1&limit=12 [36m304[0m 4.291 ms - -[0m
-[0mGET /api/auctions?status=ended&page=1&limit=12 [36m304[0m 3.982 ms - -[0m
-[0mGET /api/auctions?status=cancelled&page=1&limit=12 [36m304[0m 3.895 ms - -[0m
-[0mGET /api/users/69cd3f342f76ce6dda17aae5/nfts?type=created [32m200[0m 12.464 ms - 1116[0m
-[0mGET /api/offers/received [36m304[0m 9.284 ms - -[0m
-[0mGET /api/users/69cd3f342f76ce6dda17aae5/nfts?type=created [36m304[0m 12.541 ms - -[0m
-[0mGET /api/offers/received [36m304[0m 12.455 ms - -[0m
-[0mGET /api/nfts?page=1&limit=12&sort=newest [36m304[0m 8.198 ms - -[0m
-[0mGET /api/nfts?page=1&limit=12&sort=newest [36m304[0m 9.299 ms - -[0m
-[0mGET /api/nfts/trending [36m304[0m 4.252 ms - -[0m
-[0mGET /api/users/top-creators [32m200[0m 11.468 ms - 178[0m
-[0mGET /api/nfts/stats [32m200[0m 23.563 ms - 85[0m
-[0mGET /api/auth/me [32m200[0m 19.400 ms - 379[0m
-[0mGET /api/nfts/trending [36m304[0m 7.307 ms - -[0m
-[0mGET /api/users/top-creators [36m304[0m 3.440 ms - -[0m
-[0mGET /api/auth/me [36m304[0m 11.715 ms - -[0m
-[0mGET /api/nfts/stats [36m304[0m 12.429 ms - -[0m
-[0mGET /api/auctions?status=active&page=1&limit=12 [36m304[0m 3.970 ms - -[0m
-[0mGET /api/auctions?status=active&page=1&limit=12 [36m304[0m 4.547 ms - -[0m
-[0mGET /api/auctions?status=ended&page=1&limit=12 [36m304[0m 4.015 ms - -[0m
-[0mGET /api/auctions?status=cancelled&page=1&limit=12 [36m304[0m 3.810 ms - -[0m
-[0mGET /api/auctions?status=active&page=1&limit=12 [36m304[0m 3.989 ms - -[0m
-[0mGET /api/users/rahul [31m500[0m 8.279 ms - 84[0m
-[0mGET /api/users/rahul [31m500[0m 8.268 ms - 84[0m
-[0mGET /api/auth/me [36m304[0m 7.222 ms - -[0m
-[0mGET /api/users/rahul [31m500[0m 13.088 ms - 84[0m
-[0mGET /api/auth/me [36m304[0m 9.759 ms - -[0m
-[0mGET /api/users/rahul [31m500[0m 9.179 ms - 84[0m
-[0mGET /api/users/rahul [31m500[0m 10.665 ms - 84[0m
-[0mGET /api/users/rahul [31m500[0m 9.458 ms - 84[0m
-[0mGET /api/nfts?page=1&limit=12&sort=newest [36m304[0m 8.692 ms - -[0m
-[0mGET /api/nfts?page=1&limit=12&sort=newest [36m304[0m 8.671 ms - -[0m
-[0mGET /api/offers/nft/69cd3fa52f76ce6dda17ab17 [32m200[0m 3.363 ms - 28[0m
-[0mGET /api/nfts/69cd3fa52f76ce6dda17ab17 [32m200[0m 15.202 ms - 1222[0m
-[0mGET /api/offers/nft/69cd3fa52f76ce6dda17ab17 [36m304[0m 2.634 ms - -[0m
-[0mGET /api/nfts/69cd3fa52f76ce6dda17ab17 [32m200[0m 10.429 ms - 1222[0m
-[0mGET /api/nfts?page=1&limit=12&sort=newest [32m200[0m 12.245 ms - 1232[0m
-[0mGET /api/nfts?page=1&limit=12&sort=newest [36m304[0m 8.751 ms - -[0m
-[0mGET /api/nfts?page=1&limit=12&sort=newest&category=crypto [32m200[0m 3.651 ms - 81[0m
-[0mGET /api/nfts?page=1&limit=12&sort=newest [36m304[0m 6.839 ms - -[0m
-[0mGET /api/nfts?page=1&limit=12&sort=newest [36m304[0m 7.449 ms - -[0m
-[0mGET /api/offers/received [36m304[0m 7.922 ms - -[0m
-[0mGET /api/users/69cd3f342f76ce6dda17aae5/nfts?type=created [32m200[0m 12.092 ms - 1116[0m
-[0mGET /api/offers/received [36m304[0m 7.705 ms - -[0m
-[0mGET /api/users/69cd3f342f76ce6dda17aae5/nfts?type=created [36m304[0m 12.317 ms - -[0m
-[0mGET /api/users/69cd3f342f76ce6dda17aae5/nfts?type=owned [32m200[0m 8.782 ms - 1116[0m
-[0mGET /api/users/69cd3f342f76ce6dda17aae5/nfts?type=created [36m304[0m 7.513 ms - -[0m
-[32m[nodemon] restarting child process[39m
+[0mGET /api/nfts/trending [36m304[0m 25.208 ms - -[0m
+[0mGET /api/users/top-creators [36m304[0m 12.173 ms - -[0m
+[0mGET /api/nfts/trending [36m304[0m 3.761 ms - -[0m
+[0mGET /api/nfts/stats [36m304[0m 36.422 ms - -[0m
+[0mGET /api/users/top-creators [36m304[0m 5.044 ms - -[0m
+[0mGET /api/nfts/stats [36m304[0m 9.452 ms - -[0m
+[0mGET /api/nfts/trending [36m304[0m 6.974 ms - -[0m
+[0mGET /api/users/top-creators [36m304[0m 7.550 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 34.208 ms - -[0m
+[0mGET /api/nfts/stats [36m304[0m 49.418 ms - -[0m
+[0mGET /api/nfts/trending [36m304[0m 26.745 ms - -[0m
+[0mGET /api/users/top-creators [36m304[0m 21.075 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 12.882 ms - -[0m
+[0mGET /api/nfts/stats [36m304[0m 18.510 ms - -[0m
+[0mGET /api/nfts/trending [36m304[0m 2.994 ms - -[0m
+[0mGET /api/users/top-creators [36m304[0m 5.114 ms - -[0m
+[0mGET /api/nfts/trending [36m304[0m 2.873 ms - -[0m
+[0mGET /api/nfts/stats [36m304[0m 13.946 ms - -[0m
+[0mGET /api/users/top-creators [36m304[0m 3.286 ms - -[0m
+[0mGET /api/nfts/stats [36m304[0m 8.772 ms - -[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&listed=true [36m304[0m 6.508 ms - -[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&listed=true [36m304[0m 5.837 ms - -[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&category=trending&listed=true [36m304[0m 4.357 ms - -[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&listed=true [36m304[0m 4.331 ms - -[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&listed=true [36m304[0m 10.074 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 10.184 ms - -[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&listed=true [36m304[0m 7.740 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 9.603 ms - -[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&listed=true [36m304[0m 6.665 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 11.838 ms - -[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&listed=true [36m304[0m 7.068 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 7.393 ms - -[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&category=trending&listed=true [36m304[0m 5.374 ms - -[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&category=wholesome&listed=true [36m304[0m 3.039 ms - -[0m
+[0mGET /api/auctions?status=active&page=1&limit=12 [36m304[0m 6.129 ms - -[0m
+[0mGET /api/auctions?status=active&page=1&limit=12 [36m304[0m 4.618 ms - -[0m
+[0mGET /api/users?page=1&limit=16 [32m200[0m 5.921 ms - 791[0m
+[0mGET /api/users?page=1&limit=16 [36m304[0m 5.960 ms - -[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&listed=true [36m304[0m 3.897 ms - -[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&listed=true [36m304[0m 3.016 ms - -[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest [32m200[0m 10.487 ms - 7532[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&listed=true [36m304[0m 3.628 ms - -[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest [36m304[0m 8.616 ms - -[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&listed=true [36m304[0m 3.374 ms - -[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest [36m304[0m 7.076 ms - -[0m
+[0mGET /api/offers/nft/69df61d6942c8de1ce212891 [36m304[0m 4.885 ms - -[0m
+[0mGET /api/nfts/69df61d6942c8de1ce212891 [32m200[0m 17.722 ms - 1498[0m
+[0mGET /api/offers/nft/69df61d6942c8de1ce212891 [36m304[0m 2.772 ms - -[0m
+[0mGET /api/nfts/69df61d6942c8de1ce212891 [32m200[0m 6.888 ms - 1498[0m
+[0mGET /api/auth/me [36m304[0m 7.937 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 6.929 ms - -[0m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
 [32m[nodemon] starting `node src/server.js`[39m
 
 🚀 MemeVault API running on http://localhost:5000
 📡 Environment: development
 
 ✅  MongoDB Connected: localhost
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/server.js`[39m
+
+🚀 MemeVault API running on http://localhost:5000
+📡 Environment: development
+
+✅  MongoDB Connected: localhost
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/server.js`[39m
+
+🚀 MemeVault API running on http://localhost:5000
+📡 Environment: development
+
+✅  MongoDB Connected: localhost
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/server.js`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/server.js`[39m
+
+🚀 MemeVault API running on http://localhost:5000
+📡 Environment: development
+
+✅  MongoDB Connected: localhost
+[0mGET /api/auth/me [33m401[0m 26.233 ms - 44[0m
+[0mGET /api/auth/me [33m401[0m 7.685 ms - 44[0m
+[0mPOST /api/auth/login [33m401[0m 16.919 ms - 49[0m
+[0mPOST /api/auth/register [32m201[0m 522.812 ms - 470[0m
+[0mGET /api/nfts/trending [32m200[0m 32.541 ms - 2220[0m
+[0mGET /api/users/top-creators [32m200[0m 14.067 ms - 670[0m
+[0mGET /api/nfts/stats [32m200[0m 45.035 ms - 85[0m
+[0mGET /api/nfts/trending [32m200[0m 16.992 ms - 2220[0m
+[0mGET /api/users/top-creators [36m304[0m 8.622 ms - -[0m
+[0mGET /api/nfts/stats [36m304[0m 11.320 ms - -[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&listed=true [32m200[0m 12.035 ms - 2712[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&listed=true [32m200[0m 11.685 ms - 2712[0m
+[0mGET /api/offers/nft/69e7a1819774b4679f4baece [32m200[0m 5.731 ms - 28[0m
+[0mGET /api/nfts/69e7a1819774b4679f4baece [32m200[0m 27.272 ms - 1348[0m
+[0mGET /api/offers/nft/69e7a1819774b4679f4baece [36m304[0m 3.676 ms - -[0m
+[0mGET /api/nfts/69e7a1819774b4679f4baece [32m200[0m 11.770 ms - 1387[0m
+[0mPOST /api/nfts/69e7a1819774b4679f4baece/buy [32m200[0m 18.861 ms - 1327[0m
+[0mGET /api/nfts/69e7a1819774b4679f4baece [32m200[0m 9.156 ms - 1571[0m
+[0mPOST /api/auctions [32m201[0m 18.548 ms - 2428[0m
+[0mGET /api/nfts/69e7a1819774b4679f4baece [32m200[0m 8.326 ms - 1592[0m
+[0mGET /api/auctions/69e7a27e92d8c8b67b696228 [32m200[0m 9.809 ms - 2178[0m
+[0mGET /api/auctions/69e7a27e92d8c8b67b696228 [32m200[0m 7.028 ms - 2178[0m
+[0mGET /api/offers/nft/69e7a1819774b4679f4baece [36m304[0m 3.496 ms - -[0m
+[0mGET /api/nfts/69e7a1819774b4679f4baece [32m200[0m 15.864 ms - 1592[0m
+[0mGET /api/offers/nft/69e7a1819774b4679f4baece [36m304[0m 4.049 ms - -[0m
+[0mGET /api/nfts/69e7a1819774b4679f4baece [32m200[0m 10.560 ms - 1592[0m
+[0mPOST /api/auth/register [31m500[0m 498.518 ms - 140[0m
+[0mPOST /api/auth/login [33m401[0m 3.055 ms - 49[0m
+[0mPOST /api/auth/register [31m500[0m 491.902 ms - 140[0m
+[0mPOST /api/auth/register [31m500[0m 489.217 ms - 140[0m
+[0mPOST /api/auth/register [31m500[0m 491.555 ms - 140[0m
+[0mPOST /api/auth/register [31m500[0m 495.053 ms - 140[0m
+[0mPOST /api/auth/register [31m500[0m 491.937 ms - 140[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&listed=true [32m200[0m 9.222 ms - 1395[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&listed=true [32m200[0m 8.997 ms - 1395[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&category=trending&listed=true [32m200[0m 8.108 ms - 1395[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&category=dank&listed=true [32m200[0m 3.661 ms - 81[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&category=trending&listed=true [32m200[0m 7.494 ms - 1395[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&listed=true [32m200[0m 6.800 ms - 1395[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&category=trending&listed=true [32m200[0m 7.443 ms - 1395[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&category=dank&listed=true [36m304[0m 4.164 ms - -[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&listed=true [32m200[0m 8.792 ms - 1395[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&listed=true [32m200[0m 8.618 ms - 1395[0m
+[0mGET /api/auctions?status=active&page=1&limit=12 [32m200[0m 10.852 ms - 1880[0m
+[0mGET /api/auctions?status=active&page=1&limit=12 [32m200[0m 9.664 ms - 1880[0m
+[0mGET /api/auctions/69e7a27e92d8c8b67b696228 [32m200[0m 7.220 ms - 2178[0m
+[0mGET /api/auctions/69e7a27e92d8c8b67b696228 [32m200[0m 5.962 ms - 2178[0m
+[0mGET /api/auctions?status=active&page=1&limit=12 [32m200[0m 9.653 ms - 1880[0m
+[0mGET /api/auctions?status=active&page=1&limit=12 [32m200[0m 8.396 ms - 1880[0m
+[0mGET /api/auctions/69e7a1819774b4679f4baed3 [32m200[0m 6.635 ms - 1682[0m
+[0mGET /api/auctions/69e7a1819774b4679f4baed3 [32m200[0m 6.388 ms - 1682[0m
+[0mGET /api/auctions?status=active&page=1&limit=12 [32m200[0m 9.089 ms - 1880[0m
+[0mGET /api/auctions?status=active&page=1&limit=12 [32m200[0m 8.833 ms - 1880[0m
+[0mGET /api/auctions/69e7a27e92d8c8b67b696228 [32m200[0m 6.897 ms - 2178[0m
+[0mGET /api/auctions/69e7a27e92d8c8b67b696228 [32m200[0m 7.316 ms - 2178[0m
+[0mGET /api/offers/nft/69e7a1819774b4679f4baece [32m200[0m 4.243 ms - 28[0m
+[0mGET /api/nfts/69e7a1819774b4679f4baece [32m200[0m 11.085 ms - 1592[0m
+[0mGET /api/offers/nft/69e7a1819774b4679f4baece [36m304[0m 1.934 ms - -[0m
+[0mGET /api/nfts/69e7a1819774b4679f4baece [32m200[0m 7.194 ms - 1592[0m
+[0mGET /api/auctions/69e7a27e92d8c8b67b696228 [32m200[0m 6.353 ms - 2178[0m
+[0mGET /api/auctions/69e7a27e92d8c8b67b696228 [32m200[0m 6.014 ms - 2178[0m
+[0mGET /api/auctions?status=active&page=1&limit=12 [32m200[0m 8.885 ms - 1880[0m
+[0mGET /api/auctions?status=active&page=1&limit=12 [32m200[0m 10.705 ms - 1880[0m
+[0mPOST /api/auth/login [32m200[0m 488.738 ms - 470[0m
+[0mGET /api/nfts/trending [32m200[0m 6.756 ms - 1121[0m
+[0mGET /api/users/top-creators [36m304[0m 5.006 ms - -[0m
+[0mGET /api/nfts/stats [32m200[0m 14.117 ms - 85[0m
+[0mGET /api/users/top-creators [36m304[0m 3.705 ms - -[0m
+[0mGET /api/nfts/trending [32m200[0m 6.670 ms - 1121[0m
+[0mGET /api/nfts/stats [36m304[0m 7.434 ms - -[0m
+[0mGET /api/auth/me [32m200[0m 6.520 ms - 379[0m
+[0mGET /api/auth/me [36m304[0m 4.285 ms - -[0m
+[0mPOST /api/upload/image [32m200[0m 35106.422 ms - 215[0m
+[0mPOST /api/upload/metadata [32m200[0m 3248.807 ms - 421[0m
+[0mPOST /api/nfts [32m201[0m 15.994 ms - 1888[0m
+[0mGET /api/offers/received [36m304[0m 9.536 ms - -[0m
+[0mGET /api/users/69e7a25692d8c8b67b6961e6/nfts?type=created [32m200[0m 13.864 ms - 1311[0m
+[0mGET /api/offers/received [36m304[0m 6.986 ms - -[0m
+[0mGET /api/users/69e7a25692d8c8b67b6961e6/nfts?type=created [36m304[0m 10.987 ms - -[0m
+[0mGET /api/users/69e7a25692d8c8b67b6961e6/nfts?type=owned [32m200[0m 8.078 ms - 2772[0m
+[0mGET /api/users/69e7a25692d8c8b67b6961e6/nfts?type=owned [32m200[0m 8.559 ms - 2772[0m
+[0mGET /api/users/69e7a25692d8c8b67b6961e6/nfts?type=created [36m304[0m 9.303 ms - -[0m
+[0mGET /api/users/69e7a25692d8c8b67b6961e6/nfts?type=owned [32m200[0m 10.289 ms - 2772[0m
+[0mGET /api/users/69e7a25692d8c8b67b6961e6/nfts?type=owned [32m200[0m 8.073 ms - 2772[0m
+[0mGET /api/offers/nft/69e7ac6192d8c8b67b696306 [32m200[0m 3.858 ms - 28[0m
+[0mGET /api/nfts/69e7ac6192d8c8b67b696306 [32m200[0m 14.946 ms - 1378[0m
+[0mGET /api/offers/nft/69e7ac6192d8c8b67b696306 [36m304[0m 2.168 ms - -[0m
+[0mGET /api/nfts/69e7ac6192d8c8b67b696306 [32m200[0m 9.939 ms - 1378[0m
+[0mPUT /api/nfts/69e7ac6192d8c8b67b696306 [32m200[0m 8.207 ms - 1230[0m
+[0mGET /api/nfts/69e7ac6192d8c8b67b696306 [32m200[0m 8.132 ms - 1378[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&listed=true [32m200[0m 12.632 ms - 2742[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&listed=true [32m200[0m 9.710 ms - 2742[0m
+[0mGET /api/offers/nft/69e7ac6192d8c8b67b696306 [36m304[0m 4.370 ms - -[0m
+[0mGET /api/nfts/69e7ac6192d8c8b67b696306 [32m200[0m 16.245 ms - 1378[0m
+[0mGET /api/offers/nft/69e7ac6192d8c8b67b696306 [36m304[0m 3.130 ms - -[0m
+[0mGET /api/nfts/69e7ac6192d8c8b67b696306 [32m200[0m 9.415 ms - 1378[0m
+[0mGET /api/users?page=1&limit=16 [32m200[0m 6.366 ms - 756[0m
+[0mGET /api/users?page=1&limit=16 [36m304[0m 4.720 ms - -[0m
+[0mGET /api/users?page=1&limit=16 [36m304[0m 7.298 ms - -[0m
+[0mGET /api/users?page=1&limit=16 [36m304[0m 6.946 ms - -[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&listed=true [32m200[0m 7.966 ms - 2742[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&listed=true [32m200[0m 8.964 ms - 2742[0m
+[0mGET /api/auctions?status=active&page=1&limit=12 [32m200[0m 8.330 ms - 1880[0m
+[0mGET /api/auctions?status=active&page=1&limit=12 [32m200[0m 8.356 ms - 1880[0m
+[0mGET /api/auctions/69e7a1819774b4679f4baed3 [32m200[0m 8.976 ms - 1682[0m
+[0mGET /api/auctions/69e7a1819774b4679f4baed3 [32m200[0m 6.619 ms - 1682[0m
+[0mPOST /api/auctions/69e7a1819774b4679f4baed3/bid [31m500[0m 9.900 ms - 105[0m
+[0mPOST /api/auctions/69e7a1819774b4679f4baed3/bid [31m500[0m 6.539 ms - 105[0m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/server.js`[39m
+
+🚀 MemeVault API running on http://localhost:5000
+📡 Environment: development
+
+✅  MongoDB Connected: localhost
+[0mGET /api/auctions/69e7a1819774b4679f4baed3 [32m200[0m 60.179 ms - 1743[0m
+[0mGET /api/auth/me [32m200[0m 37.355 ms - 379[0m
+[0mGET /api/auctions/69e7a1819774b4679f4baed3 [32m200[0m 14.313 ms - 1743[0m
+[0mGET /api/auth/me [36m304[0m 7.883 ms - -[0m
+[0mPOST /api/auctions/69e7a1819774b4679f4baed3/bid [32m200[0m 42.439 ms - 2657[0m
+[0mGET /api/auctions/69e7a1819774b4679f4baed3 [32m200[0m 12.826 ms - 2233[0m
+[0mGET /api/users/DogeMaster [32m200[0m 12.898 ms - 1104[0m
+[0mGET /api/users/DogeMaster [36m304[0m 8.592 ms - -[0m
+[0mGET /api/users/69e7a1819774b4679f4baec8/nfts?type=created [32m200[0m 18.368 ms - 2703[0m
+[0mGET /api/users/69e7a1819774b4679f4baec8/nfts?type=created [32m200[0m 13.327 ms - 2703[0m
+[0mGET /api/auctions/69e7a1819774b4679f4baed3 [32m200[0m 11.104 ms - 2233[0m
+[0mGET /api/auctions/69e7a1819774b4679f4baed3 [32m200[0m 8.374 ms - 2233[0m
+[0mGET /api/auctions?status=active&page=1&limit=12 [32m200[0m 14.842 ms - 2360[0m
+[0mGET /api/auctions?status=active&page=1&limit=12 [36m304[0m 11.647 ms - -[0m
+[0mGET /api/auctions/69e7a27e92d8c8b67b696228 [32m200[0m 6.909 ms - 2178[0m
+[0mGET /api/auctions/69e7a27e92d8c8b67b696228 [32m200[0m 6.091 ms - 2178[0m
+[0mGET /api/auctions?status=active&page=1&limit=12 [32m200[0m 11.721 ms - 2360[0m
+[0mGET /api/auctions?status=active&page=1&limit=12 [36m304[0m 11.631 ms - -[0m
+[0mPOST /api/auth/register [31m500[0m 506.861 ms - 140[0m
+[0mPOST /api/auth/login [33m401[0m 3.351 ms - 49[0m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/server.js`[39m
+
+🚀 MemeVault API running on http://localhost:5000
+📡 Environment: development
+
+✅  MongoDB Connected: localhost
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/server.js`[39m
+
+🚀 MemeVault API running on http://localhost:5000
+📡 Environment: development
+
+✅  MongoDB Connected: localhost
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/server.js`[39m
+
+🚀 MemeVault API running on http://localhost:5000
+📡 Environment: development
+
+✅  MongoDB Connected: localhost
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/server.js`[39m
+
+🚀 MemeVault API running on http://localhost:5000
+📡 Environment: development
+
+✅  MongoDB Connected: localhost
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/server.js`[39m
+
+🚀 MemeVault API running on http://localhost:5000
+📡 Environment: development
+
+✅  MongoDB Connected: localhost
+[0mPOST /api/auth/register [32m201[0m 557.520 ms - 458[0m
+[0mGET /api/nfts/trending [32m200[0m 31.296 ms - 2387[0m
+[0mGET /api/users/top-creators [32m200[0m 14.922 ms - 790[0m
+[0mGET /api/nfts/stats [32m200[0m 42.537 ms - 85[0m
+[0mGET /api/nfts/trending [32m200[0m 12.980 ms - 2387[0m
+[0mGET /api/users/top-creators [36m304[0m 6.679 ms - -[0m
+[0mGET /api/nfts/stats [36m304[0m 8.340 ms - -[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&listed=true [32m200[0m 15.410 ms - 2700[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&listed=true [32m200[0m 13.185 ms - 2700[0m
+[0mGET /api/auth/me [32m200[0m 17.323 ms - 367[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&listed=true [32m200[0m 23.861 ms - 2700[0m
+[0mGET /api/auth/me [36m304[0m 8.830 ms - -[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&listed=true [32m200[0m 13.583 ms - 2700[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest [32m200[0m 12.124 ms - 5597[0m
+[0mGET /api/auth/me [36m304[0m 10.956 ms - -[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&listed=true [32m200[0m 15.752 ms - 2700[0m
+[0mGET /api/auth/me [36m304[0m 7.599 ms - -[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&listed=true [32m200[0m 18.682 ms - 2700[0m
+[0mGET /api/auctions?status=active&page=1&limit=12 [32m200[0m 13.512 ms - 2339[0m
+[0mGET /api/auctions?status=active&page=1&limit=12 [36m304[0m 10.527 ms - -[0m
+[0mGET /api/auctions/69e7a27e92d8c8b67b696228 [32m200[0m 9.376 ms - 2157[0m
+[0mGET /api/auctions/69e7a27e92d8c8b67b696228 [32m200[0m 6.619 ms - 2157[0m
+[0mPOST /api/auctions/69e7a27e92d8c8b67b696228/bid [32m200[0m 22.426 ms - 3065[0m
+[0mGET /api/auctions/69e7a27e92d8c8b67b696228 [32m200[0m 9.141 ms - 2634[0m
+[0mGET /api/auctions/69e7a27e92d8c8b67b696228 [32m200[0m 10.482 ms - 2634[0m
+[0mGET /api/auth/me [32m200[0m 9.456 ms - 358[0m
+[0mGET /api/auctions/69e7a27e92d8c8b67b696228 [32m200[0m 13.433 ms - 2634[0m
+[0mGET /api/auth/me [36m304[0m 5.762 ms - -[0m
+[0mGET /api/auctions?status=active&page=1&limit=12 [32m200[0m 11.538 ms - 2732[0m
+[0mGET /api/auctions?status=active&page=1&limit=12 [36m304[0m 11.722 ms - -[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&listed=true [32m200[0m 9.003 ms - 2700[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&listed=true [32m200[0m 10.810 ms - 2700[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&listed=true [32m200[0m 8.355 ms - 2700[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&listed=true [32m200[0m 9.597 ms - 2700[0m
+[0mPOST /api/nfts/69e7a1819774b4679f4baed0/buy [32m200[0m 16.393 ms - 1321[0m
+[0mGET /api/auth/me [36m304[0m 8.066 ms - -[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&listed=true [32m200[0m 12.308 ms - 1385[0m
+[0mGET /api/auth/me [36m304[0m 7.084 ms - -[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&listed=true [36m304[0m 10.748 ms - -[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&category=politics&listed=true [36m304[0m 6.529 ms - -[0m
+[0mGET /api/nfts?page=1&limit=12&sort=newest&category=other&listed=true [36m304[0m 4.543 ms - -[0m

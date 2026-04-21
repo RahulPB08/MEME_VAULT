@@ -27,9 +27,12 @@ export const uploadImage = [
 
       const pinataJWT = process.env.PINATA_JWT;
 
+      // When Pinata is unconfigured the JWT equals the placeholder string.
+      // Return a clearly-named mock response so the frontend can warn the user.
       if (!pinataJWT || pinataJWT === 'your_pinata_jwt') {
-        // Mock response for development
-        const mockHash = `Qm${Math.random().toString(36).substr(2, 44)}`;
+        // Use a stable, predictable hash so the frontend resolver shows the
+        // placeholder image instead of trying broken random IPFS hashes.
+        const mockHash = 'QmMOCK_PINATA_NOT_CONFIGURED';
         return res.json({
           success: true,
           ipfsHash: mockHash,
@@ -86,7 +89,7 @@ export const uploadMetadata = async (req, res) => {
     const pinataJWT = process.env.PINATA_JWT;
 
     if (!pinataJWT || pinataJWT === 'your_pinata_jwt') {
-      const mockHash = `Qm${Math.random().toString(36).substr(2, 44)}`;
+      const mockHash = 'QmMOCK_PINATA_NOT_CONFIGURED';
       return res.json({
         success: true,
         ipfsHash: mockHash,

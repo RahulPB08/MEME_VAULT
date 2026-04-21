@@ -146,11 +146,36 @@ export const endAuction = async (req, res) => {
         owner: auction.highestBidder,
         onAuction: false,
         sold: true,
-        history: { $push: { event: 'auction', from: auction.sellerAddress, to: auction.highestBidderAddress, price: auction.highestBid } },
+        $push: { history: { event: 'auction', from: auction.sellerAddress, to: auction.highestBidderAddress, price: auction.highestBid } },
       });
     } else {
       await NFT.findByIdAndUpdate(auction.nft, { onAuction: false });
     }
+
+    res.json({ success: true, auction });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// @desc    Cancel auction (only seller, no bids)
+// @route   PUT /api/auctions/:id/cancel
+export const cancelAuction = async (req, res) => {
+  try {
+    const auction = await Auction.findById(req.params.id);
+    if (!auction) return res.status(404).json({ success: false, message: 'Auction not found' });
+    if (auction.seller.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ success: false, message: 'Not authorized' });
+    }
+    if (auction.bids && auction.bids.length > 0) {
+      return res.status(400).json({ success: false, message: 'Cannot cancel auction with active bids' });
+    }
+
+    auction.cancelled = true;
+    await auction.save();
+
+    // Restore NFT status
+    await NFT.findByIdAndUpdate(auction.nft, { onAuction: false, auctionId: null });
 
     res.json({ success: true, auction });
   } catch (error) {
